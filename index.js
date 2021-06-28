@@ -30,8 +30,11 @@ const generateId = (max) => {
   return Math.floor(Math.random() * max);
 };
 
+morgan.token("data", function(req, res) {return JSON.stringify(req.body)})
+
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(morgan(":data"));
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
@@ -57,7 +60,6 @@ app.delete("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons/", (request, response) => {
   const person = request.body;
-  console.log(person);
   if (!person.name || !person.number) {
     response.status(500).send({ error: "Name or number is missing" });
   } else if (persons.find((p) => p.name === person.name)) {
