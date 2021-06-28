@@ -1,7 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const app = express();
-const port = 3001;
+
 
 let persons = [
   {
@@ -33,6 +34,7 @@ const generateId = (max) => {
 morgan.token("data", function(req, res) {return JSON.stringify(req.body)})
 
 app.use(express.json());
+app.use(cors());
 app.use(morgan("tiny"));
 app.use(morgan(":data"));
 
@@ -71,6 +73,8 @@ app.post("/api/persons/", (request, response) => {
     response.send(newPerson);
   }
 });
+
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
   console.log(`Listening at ${port}`);
