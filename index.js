@@ -38,6 +38,7 @@ app.use(morgan("tiny"));
 morgan.token("data", function (req, res) {
   return JSON.stringify(req.body);
 });
+
 app.use(morgan(":data"));
 
 app.get("/api/persons", (request, response) => {
@@ -81,3 +82,4 @@ const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Listening at ${port}`);
 });
+
