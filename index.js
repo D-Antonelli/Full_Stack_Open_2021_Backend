@@ -1,6 +1,5 @@
-const path = require("path");
-require("dotenv").config({path: path.resolve(__dirname, "../.env")});
-const Person = require("./models/person");
+require("dotenv").config();
+const Person = require("./person");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
