@@ -40,7 +40,11 @@ morgan.token("data", function (req, res) {
 app.use(morgan(":data"));
 
 app.get("/api/persons", (request, response) => {
-  Person.find({}).then(persons => response.json(persons));
+  Person.find({})
+    .then((persons) => response.json(persons))
+    .catch((error) => {
+      console.log(error.message);
+    });
 });
 
 app.get("/info", (request, response) => {
@@ -66,14 +70,17 @@ app.post("/api/persons/", (request, response) => {
 
   const person = new Person({
     name: body.name,
-    number: body.number
-  })
+    number: body.number,
+  });
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson);
-  }).catch(error => {
-    console.log(error.message);
-  })
+  person
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
 
   /*if (!person.name || !person.number) {
     response.status(500).send({ error: "Name or number is missing" });
