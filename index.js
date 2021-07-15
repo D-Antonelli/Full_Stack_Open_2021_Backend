@@ -39,9 +39,11 @@ morgan.token("data", function (req, res) {
 
 app.use(morgan(":data"));
 
+if(process.env.NODE_ENV === 'production'){
 app.get("/api/persons", (request, response) => {
   Person.find({}).then(persons => response.json(persons));
 });
+}
 
 app.get("/info", (request, response) => {
   const info = `<p>Phonebook has info for ${persons.length} people</p>`;
