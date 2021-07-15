@@ -1,7 +1,7 @@
-POST https://peaceful-anchorage-48773.herokuapp.com/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Ali Cercil",
-    "number": "1234"  
+    "name": "Ali Cercilli",
+    "number": "1234"
 }
