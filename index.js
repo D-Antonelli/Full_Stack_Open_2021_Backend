@@ -5,29 +5,6 @@ const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-532425",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendick",
-    number: "39-23-2837383",
-  },
-];
-
 app.use(express.json());
 app.use(express.static("build"));
 app.use(cors());
@@ -41,10 +18,7 @@ app.use(morgan(":data"));
 
 app.get("/api/persons", (request, response) => {
   Person.find({})
-    .then((persons) => response.json(persons))
-    .catch((error) => {
-      console.log(error.message);
-    });
+    .then((persons) => response.json(persons));
 });
 
 app.get("/info", (request, response) => {
@@ -77,9 +51,6 @@ app.post("/api/persons/", (request, response) => {
     .save()
     .then((savedPerson) => {
       response.json(savedPerson);
-    })
-    .catch((error) => {
-      console.log(error.message);
     });
 
   /*if (!person.name || !person.number) {
