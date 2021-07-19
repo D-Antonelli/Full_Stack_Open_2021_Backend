@@ -20,10 +20,14 @@ app.get("/api/persons", (request, response) => {
   Person.find({}).then((persons) => response.json(persons));
 });
 
-app.get("/info", (request, response) => {
-  const info = `<p>Phonebook has info for ${persons.length} people</p>`;
-  const date = `<p>${new Date()}</p>`;
-  response.send(`${info}${date}`);
+app.get("/info", (request, response, next) => {
+  Person.countDocuments({})
+    .then((count) => {
+      const info = `<p>Phonebook has info for ${count} people</p>`;
+      const date = `<p>${new Date()}</p>`;
+      response.send(`${info}${date}`);
+    })
+    .catch((err) => next(err));
 });
 
 app.get("/api/persons/:id", (request, response, next) => {
