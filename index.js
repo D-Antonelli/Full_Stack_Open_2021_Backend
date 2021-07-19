@@ -17,8 +17,7 @@ morgan.token("data", function (req, res) {
 app.use(morgan(":data"));
 
 app.get("/api/persons", (request, response) => {
-  Person.find({})
-    .then((persons) => response.json(persons));
+  Person.find({}).then((persons) => response.json(persons));
 });
 
 app.get("/info", (request, response) => {
@@ -33,37 +32,53 @@ app.get("/api/persons/:id", (request, response) => {
   person ? response.json(person) : response.status(404).end();
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  persons = persons.filter((p) => p.id !== id);
-  response.status(204).end();
+app.delete("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  Person.findByIdAndRemove(id)
+    .then((result) => {
+      if (result) {
+        response.status(204).end();
+      } else {
+        response.status(404).send("id not found");
+      }
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
-app.post("/api/persons/", (request, response) => {
-  const body = request.body;
+app.put("/api/persons/:id", (request, response, next) => {
+  const filter = request.params.id;
+  const update = { $set: { number: request.body.number } };
+  Person.findByIdAndUpdate(filter, update, { new: true })
+    .then((doc) => response.json(doc))
+    .catch((error) => next(error));
+});
 
+app.post("/api/persons/", (request, response, next) => {
+  const body = request.body;
   const person = new Person({
     name: body.name,
     number: body.number,
   });
-
   person
     .save()
     .then((savedPerson) => {
       response.json(savedPerson);
-    });
-
-  /*if (!person.name || !person.number) {
-    response.status(500).send({ error: "Name or number is missing" });
-  } else if (persons.find((p) => p.name === person.name)) {
-    response.status(500).send({ error: "name must be unique" });
-  } else {
-    const newId = generateId(1000);
-    const newPerson = { id: newId, ...person };
-    persons = persons.concat(newPerson);
-    response.send(newPerson);
-  } */
+    })
+    .catch((error) => next(error));
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.log("message is", error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+
+app.use(errorHandler);
 
 const port = process.env.PORT || 3001;
 
