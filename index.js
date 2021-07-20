@@ -52,10 +52,11 @@ app.delete("/api/persons/:id", (request, response, next) => {
     });
 });
 
+//TO-DO: USE VALIDATION FOR UPDATE OPERATIONS
 app.put("/api/persons/:id", (request, response, next) => {
   const filter = request.params.id;
   const update = { $set: { number: request.body.number } };
-  Person.findByIdAndUpdate(filter, update, { new: true })
+  Person.findByIdAndUpdate(filter, update, { new: true, runValidators: true })
     .then((doc) => response.json(doc))
     .catch((error) => next(error));
 });
@@ -79,9 +80,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
-  }
-  else if(error.name === "ValidationError") {
-    return response.status(400).json({error: error.message});
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
   next(error);
 };
