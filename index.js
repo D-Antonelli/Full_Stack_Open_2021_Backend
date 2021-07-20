@@ -10,7 +10,7 @@ app.use(express.static("build"));
 app.use(cors());
 app.use(morgan("tiny"));
 
-morgan.token("data", function (req, res) {
+morgan.token("data", function (req) {
   return JSON.stringify(req.body);
 });
 

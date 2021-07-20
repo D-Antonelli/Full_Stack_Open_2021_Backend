@@ -7,7 +7,7 @@ const url = `mongodb+srv://fullstack:${password}@cluster0.jmogz.mongodb.net/phon
 
 if (process.argv.length < 3) {
   console.log(
-    `Please provide the password as an argument: node mongo.js <password>`
+    "Please provide the password as an argument: node mongo.js <password>"
   );
   process.exit(1);
 }
@@ -33,7 +33,7 @@ const person = new Person({
 
 person &&
   number &&
-  person.save().then((result) => {
+  person.save().then(() => {
     console.log(`added ${person.name} ${person.number} to phonebook`);
     mongoose.connection.close();
   });
